@@ -1,19 +1,18 @@
 import cv2
 import os
 
-# Create a face detector using OpenCV's pre-trained model
-# face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+# using OpenCV's pre-trained model
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_alt2.xml')
 
-# Path to the directory containing the input images
+# Path to input images
 # main_directory = '/home/zero/ml/project/Photos/'
 main_directory = '/home/zero/ml/project/testing_data/Testing_Photos'
 
-# Path to the directory where the extracted faces will be saved
+# Path to output dir
 # output_directory = '/home/zero/ml/project/face2/'
 output_directory = '/home/zero/ml/project/testing_data/face/'
 
-# Create the output directory if it doesn't exist
+# mkdir the output dir if doesn't exist
 os.makedirs(output_directory, exist_ok=True)
 
 for curr_dir in os.listdir(main_directory) : 
@@ -40,7 +39,7 @@ for curr_dir in os.listdir(main_directory) :
             # Extract the face ROI (Region of Interest)
             face_roi = image[y:y+h, x:x+w]
 
-            resized_cropped_face = cv2.resize(face_roi, (256,256))
+            resized_cropped_face = cv2.resize(face_roi, (224,224))
             
             # Generate the output filename
             output_filename = os.path.splitext(filename)[0] + '_face' + str(cnt) +  os.path.splitext(filename)[1]
