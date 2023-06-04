@@ -6,11 +6,11 @@ face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_fronta
 
 # Path to input images
 # main_directory = '/home/zero/ml/project/Photos/'
-main_directory = '/home/zero/ml/project/testing_data/Testing_Photos'
+main_directory = '/home/zero/ml/project/NEW/aligned'
 
 # Path to output dir
 # output_directory = '/home/zero/ml/project/face2/'
-output_directory = '/home/zero/ml/project/testing_data/face/'
+output_directory = '/home/zero/ml/project/NEW/face/'
 
 # mkdir the output dir if doesn't exist
 os.makedirs(output_directory, exist_ok=True)

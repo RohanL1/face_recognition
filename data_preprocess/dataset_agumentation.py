@@ -1,6 +1,12 @@
 import cv2
 import numpy as np
 import os
+import sys
+
+
+input_folder = sys.argv[1]
+output_folder = sys.argv[2]
+
 
 def adjust_brightness(image, value):
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
@@ -23,13 +29,13 @@ def generate_augmented_images(input_folder, output_folder):
         os.makedirs(output_folder)
 
     for filename in os.listdir(input_folder):
-        if filename.endswith(".jpg") or filename.endswith(".png") or True:
+        if True: #filename.endswith(".jpg") or filename.endswith(".png") or 
             input_path = os.path.join(input_folder, filename)
             output_path = os.path.join(output_folder, filename.split('.')[0])
 
             # Load image
+            print(filename)
             image = cv2.imread(input_path)
-
             # Generate images with different color combinations
             image_grayscale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             image_inverted = cv2.bitwise_not(image)
@@ -44,16 +50,16 @@ def generate_augmented_images(input_folder, output_folder):
             #mirror image 
             mirrored_image = cv2.flip(image, 1)
             
-            # Generate images with different color combinations
-            mirror_image_grayscale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            mirror_image_inverted = cv2.bitwise_not(image)
-            mirror_image_blurred = cv2.GaussianBlur(image, (5, 5), 0)
+            # # Generate images with different color combinations
+            # mirror_image_grayscale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            # mirror_image_inverted = cv2.bitwise_not(image)
+            # mirror_image_blurred = cv2.GaussianBlur(image, (5, 5), 0)
 
-            # Generate images with different brightness and contrast settings
-            mirror_image_bright = adjust_brightness(image, 50)
-            mirror_image_dark = adjust_brightness(image, -50)
-            mirror_image_high_contrast = adjust_contrast(image, 50)
-            mirror_image_low_contrast = adjust_contrast(image, -50)
+            # # Generate images with different brightness and contrast settings
+            # mirror_image_bright = adjust_brightness(image, 50)
+            # mirror_image_dark = adjust_brightness(image, -50)
+            # mirror_image_high_contrast = adjust_contrast(image, 50)
+            # mirror_image_low_contrast = adjust_contrast(image, -50)
 
             # Save augmented images
             cv2.imwrite(output_path + "_original.jpg", image)
@@ -75,8 +81,5 @@ def generate_augmented_images(input_folder, output_folder):
             # cv2.imwrite(output_path + "_mirror_" +  "_low_contrast.jpg", mirror_image_low_contrast)
 
 if __name__ == "__main__":
-    input_folder = "../img"
-    output_folder = "../augmented_img3/"
-
     generate_augmented_images(input_folder, output_folder)
 

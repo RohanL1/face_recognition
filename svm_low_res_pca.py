@@ -1,24 +1,24 @@
 import cv2
 import numpy as np
-from sklearn import svm
+from sklearn.svm import SVC
 import os
-from sklearn.model_selection import GridSearchCV
+# from sklearn.model_selection import GridSearchCV
 import pickle
 import datetime as dt
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 # from sklearn.model_selection import train_test_split
 
-TRAIN_DIR = 'augmented_img3'
-TEST_DIR = 'test_imgs'
-res = (64,64)
+TRAIN_DIR = '/home/zero/ml/project/NEW/TRAIN/augment'
+TEST_DIR = '/home/zero/ml/project/NEW/TEST/combined'
+MODEL_DIR = 'trained_models'
+res = (64,64) # image res
 
 
 def train_pca(data, n_components):
     # Normalize the data
     scaler = StandardScaler()
     normalized_data = scaler.fit_transform(data)
-    
     # Train PCA
     pca = PCA(n_components=n_components)
     pca.fit(normalized_data)
@@ -28,7 +28,6 @@ def train_pca(data, n_components):
 def transform_pca(data, pca, scaler):
     # Normalize the data using the fitted scaler
     normalized_data = scaler.transform(data)
-    
     # Apply PCA transformation
     transformed_data = pca.transform(normalized_data)
     
@@ -36,8 +35,7 @@ def transform_pca(data, pca, scaler):
 
 
 # Load images from given DIR
-def load_data_from_dir(DATA_DIR):
-    global res
+def load_data_from_dir_res(DATA_DIR, res):
     print("Loading Data from dir:", DATA_DIR)
     files = os.listdir(DATA_DIR)
     images = []
@@ -55,6 +53,7 @@ def load_data_from_dir(DATA_DIR):
             print("Failed to load image:", file)
     X = np.array(images)
     y = np.array(y) 
+    print("loaded :", len(files),"files.")
     return X,y
 
 
@@ -62,53 +61,53 @@ def get_now_string():
     return dt.datetime.now().__str__().replace(" ", "_").replace(":",'_').replace('-','_').replace('.', '_')
 
 # Save trained model to file
-def save_model_to_file(model, now_time,  prefix=''):
+def save_model_to_file(model, now_time, model_dir,  prefix=''):
     model_ser_file_name = prefix + 'model_ser_' + os.path.basename(__file__).split('.')[0] + '_'+ now_time + '.pkl'
-    print("Saving model in file:", model_ser_file_name)
-    pickle.dump(model, open(model_ser_file_name, 'wb'))
+    save_path = os.path.join(model_dir, model_ser_file_name)
+    print("Saving model in file:", save_path)
+    pickle.dump(model, open(save_path, 'wb'))
     print("Completed.")
 
-print("LODING DATA ...")
-train_data, train_labels = load_data_from_dir(TRAIN_DIR)
-test_data, test_labels = load_data_from_dir(TEST_DIR)
-print("Completed")
 
-print("PCA fit ...")
-pca_model, scaler = train_pca(train_data, n_components=200)
-print("Completed")
+# Main function
+if __name__ == '__main__' : 
+    print("LODING DATA ...")
+    train_data, train_labels = load_data_from_dir_res(TRAIN_DIR, res)
+    test_data, test_labels = load_data_from_dir_res(TEST_DIR, res)
+    print("Completed")
 
-print("transforming train and test data ...")
-trnsfm_train_data = transform_pca(train_data, pca_model, scaler)
-trnsfm_test_data = transform_pca(test_data, pca_model, scaler)
-print("Completed")
+    print("PCA fit ...")
+    pca_model, scaler = train_pca(train_data, n_components=200)
+    print("Completed")
 
-
-# param_grid={'C':[0.1,1,10,100],'gamma':[0.0001,0.001,0.1,1],'kernel':['rbf','poly']}
-# svc=svm.SVC(probability=True)
-# model=GridSearchCV(svc,param_grid)
-# Accuracy: 100.0%
-
-model = svm.SVC()
-# Accuracy: 95.92391304347827%
+    print("transforming train and test data ...")
+    trnsfm_train_data = transform_pca(train_data, pca_model, scaler)
+    trnsfm_test_data = transform_pca(test_data, pca_model, scaler)
+    print("Completed")
 
 
-# Train the classifier
-print("Training model...")
-model.fit(trnsfm_train_data, train_labels.flatten())
-print("Completed")
+    # param_grid={'C':[0.1,1,10,100],'gamma':[0.0001,0.001,0.1,1],'kernel':['rbf','poly']}
+    # svc=SVC()
+    # model=GridSearchCV(svc,param_grid)
 
-# saving the Model for future use
-now_time_string = get_now_string()
-save_model_to_file(model, now_time_string)
-save_model_to_file(pca_model, now_time_string, 'pca_')
-save_model_to_file(scaler, now_time_string, 'scaler_')
+    model = SVC()
+    # Accuracy: 71.38888888888889%
+
+    # Train the classifier
+    print("Training model...")
+    model.fit(trnsfm_train_data, train_labels.flatten())
+    print("Completed")
+
+    # saving the Model for future use
+    now_time_string = get_now_string()
+    save_model_to_file(model, now_time_string, MODEL_DIR)
+    save_model_to_file(pca_model, now_time_string, MODEL_DIR, 'pca_')
+    save_model_to_file(scaler, now_time_string, MODEL_DIR, 'scaler_')
 
 
-# Test the classifier
-# lda_test_data = lda_model.transform(test_data)
-# predictions = model.predict(lda_test_data)
-predictions = model.predict(trnsfm_test_data)
+    # Test the classifier
+    predictions = model.predict(trnsfm_test_data)
 
-# Print the accuracy of the classifier
-accuracy = np.mean(predictions == test_labels.flatten())
-print("Accuracy: {}%".format(accuracy * 100))
+    # Print the accuracy of the classifier
+    accuracy = np.mean(predictions == test_labels.flatten())
+    print("Accuracy: {}%".format(accuracy * 100))

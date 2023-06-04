@@ -5,9 +5,10 @@ import numpy as np
 import cv2
 
 # pakages for image pre_processing and feature extraction
-from keras.preprocessing import image
+# from keras.preprocessing import image
 from keras_vggface.vggface import VGGFace
 from keras_vggface.utils import preprocess_input
+# from sklearn.model_selection import GridSearchCV
 
 from sklearn.svm import SVC
 
@@ -15,8 +16,9 @@ from sklearn.svm import SVC
 import pickle
 
 # train and test data dir paths
-TRAIN_DIR = 'augmented_img3'
-TEST_DIR = 'test_imgs'
+TRAIN_DIR = '/home/zero/ml/project/NEW/TRAIN/augment'
+TEST_DIR = '/home/zero/ml/project/NEW/TEST/combined'
+MODEL_DIR = 'trained_models'
 
 # Load the pre-trained VGGFace model
 vggface_model = VGGFace(model='resnet50', include_top=False, input_shape=(224, 224, 3), pooling='avg')
@@ -24,13 +26,15 @@ vggface_model = VGGFace(model='resnet50', include_top=False, input_shape=(224, 2
 
 # Extract features
 def extract_features(data):
+    print("Extractig featrures ...")
     train_features = []
     for image_data in data:
         resized_image = cv2.resize(image_data, (224, 224))
         preprocessed_image = preprocess_input(resized_image)
         preprocessed_image = np.expand_dims(preprocessed_image, axis=0)
-        features = vggface_model.predict(preprocessed_image)
+        features = vggface_model.predict(preprocessed_image, verbose=0)
         train_features.append(features.flatten())
+    print("Completed.")
     return np.array(train_features)
 
 
@@ -52,16 +56,21 @@ def load_data_from_dir(DATA_DIR):
             print("Failed to load image:", file)
     X = np.array(images)
     y = np.array(y) 
+    print("loaded :", len(files),"files.")
     return X,y
 
 
 
+def get_now_string():
+    return dt.datetime.now().__str__().replace(" ", "_").replace(":",'_').replace('-','_').replace('.', '_')
+
+
 # Save trained model to file
-def save_model_to_file(model):
-    now_time = dt.datetime.now().__str__().replace(" ", "_").replace(":",'_').replace('-','_').replace('.', '_')
-    model_ser_file_name = 'model_ser_' + os.path.basename(__file__) + now_time + '.pkl'
-    print("Saving model in file:", model_ser_file_name)
-    pickle.dump(model, open(model_ser_file_name, 'wb'))
+def save_model_to_file(model, now_time, model_dir,  prefix=''):
+    model_ser_file_name = prefix + 'model_ser_' + os.path.basename(__file__).split('.')[0] + '_'+ now_time + '.pkl'
+    save_path = os.path.join(model_dir, model_ser_file_name)
+    print("Saving model in file:", save_path)
+    pickle.dump(model, open(save_path, 'wb'))
     print("Completed.")
 
 
@@ -72,21 +81,35 @@ if __name__ == '__main__' :
     print("LODING DATA ...")
     train_data, train_labels = load_data_from_dir(TRAIN_DIR)
     test_data, test_labels = load_data_from_dir(TEST_DIR)
+    
     print("Completed")
 
-    # extracting features : train data 
-    train_features = extract_features(train_data)
+
 
     # TRAIN
     # Training model : SVC
+    
+    print("*****TRAINING*****")
+    # extracting features : train data
+    train_features = extract_features(train_data)
+    
+    # param_grid={'C':[0.1,1,10,100],'gamma':[0.0001,0.001,0.1,1],'kernel':['rbf','poly']}
+    # svc=SVC()
+    # model=GridSearchCV(svc,param_grid)
+    # Accuracy: 96.25%
+    print("training, please wait ...")
+
     model = SVC()
+    # Accuracy: 98.5%
     model.fit(train_features, train_labels)
 
     # saving the Model for future use
-    save_model_to_file(model)
-
+    now_time_string = get_now_string()
+    save_model_to_file(model, now_time_string, MODEL_DIR)
+    
     # TEST
     # Extract features : test data
+    print("*****TESTING*****")
     test_features = extract_features(test_data)
 
     # making predictions
@@ -94,6 +117,9 @@ if __name__ == '__main__' :
 
     # accuracy of the model
     accuracy = np.mean(predictions == test_labels.flatten())
+    print("*****RESULTS*****")
     print("Accuracy: {}%".format(accuracy * 100))
+   
+    
 
 
