@@ -2,7 +2,7 @@
 
 This project aims to develop a face recognition system that can recognize and classify faces of 23 individuals. The code utilizes the Keras VGG Face model for feature extraction and Support Vector Machines (SVM) as the classifier. Additionally, the project incorporates several pre-processing techniques such as face cropping using the OpenCV Haar cascade face detector, and data augmentation methods including blurring, mirroring, changing contrast, brightness, and inverting colors.
 
-##Installation
+#Installation
 
 1.Clone the repository from GitHub:
 git clone https://github.com/RohanL1/face_recognition.git
@@ -10,7 +10,7 @@ git clone https://github.com/RohanL1/face_recognition.git
 2.Install the required dependencies using pip:
 pip install -r requirements.txt
 
-##Usage
+#Usage
 1.Ensure that you have the dataset containing images of the 23 individuals for whom you want to perform face recognition.
 
 2.Preprocess the dataset by running the data_preprocess.sh script:
@@ -28,9 +28,9 @@ The trained model will be saved as trained_models/model_ser_svm_face_recognition
 python3 face_detect.py
 The script will load the trained model and capture webcam feed to output the predicted person's name for each detected face in the webcam feed.
 
-##Acknowledgments
+#Acknowledgments
 Keras VGG Face: http://www.robots.ox.ac.uk/~vgg/software/vgg_face/
 OpenCV: https://opencv.org/
 
-##License
+#License
 This project is licensed under the MIT License. See the LICENSE file for more details.
