@@ -10,6 +10,12 @@ This project aims to develop a face recognition system that can recognize and cl
 2.Install the required dependencies using pip:</br>
 `pip install -r requirements.txt`
 
+NOTE:
+if you get ModuleNotFoundError: No module named 'keras.engine.topology', do the following to resolve it.
+change the import from from keras.engine.topology import get_source_inputs
+to
+from keras.utils.layer_utils import get_source_inputs in keras_vggface/models.py
+
 **Usage**</br>
 1.Ensure that you have the dataset containing images of the 23 individuals for whom you want to perform face recognition.</br>
 
