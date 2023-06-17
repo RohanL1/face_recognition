@@ -22,6 +22,10 @@ from keras.utils.layer_utils import get_source_inputs in keras_vggface/models.py
 2.Preprocess the dataset by running the data_preprocess.sh script:</br>
 `./data_preprocess.sh <input_dataset_dir> <output_dataset_dir>`
 </br>
+for testing dataset prep use following </br>
+`./data_preprocess_test.sh <input_dataset_dir> <output_dataset_dir>`
+
+</br>
 This script applies face cropping using the Haar cascade face detector, as well as data augmentation techniques such as blurring, mirroring, contrast adjustment, brightness adjustment, and color inversion. The preprocessed dataset will be saved in the <output_dataset_dir> directory.</br>
 
 3. Train and test the face recognition model by executing the svm_face_recognition.py script:</br>
