@@ -21,7 +21,7 @@ import sys
 # train and test data dir paths
 # TRAIN_DIR = '/home/zero/ml/project/NEW/TRAIN/augment'
 # TEST_DIR = '/home/zero/ml/project/NEW/TEST/combined'
-MODEL_DIR = 'trained_models'
+MODEL_DIR = './trained_models'
 
 # Load the pre-trained VGGFace model
 vggface_model = VGGFace(model='resnet50', include_top=False, input_shape=(224, 224, 3), pooling='avg')
@@ -70,6 +70,9 @@ def get_now_string():
 
 # Save trained model to file
 def save_model_to_file(model, now_time, model_dir,  prefix=''):
+    if not os.path.exists(model_dir):
+        os.makedirs(model_dir)
+        
     model_ser_file_name = prefix + 'model_ser_' + os.path.basename(__file__).split('.')[0] + '_'+ now_time + '.pkl'
     save_path = os.path.join(model_dir, model_ser_file_name)
     print("Saving model in file:", save_path)
@@ -81,6 +84,12 @@ def save_model_to_file(model, now_time, model_dir,  prefix=''):
 # Main function
 if __name__ == '__main__' : 
     
+    # Check the number of command-line arguments
+    if len(sys.argv) != 3:
+        print("Invalid number of arguments.")
+        print("Usage: python3", str(sys.argv[0]), "<train_dataset_dir> <test_dataset_dir>")
+        sys.exit(1)
+        
     TRAIN_DIR = sys.argv[1]
     TEST_DIR = sys.argv[2]
     

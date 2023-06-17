@@ -89,11 +89,6 @@ echo "COPING ALL IMAGES TO COMBINED FOLDER ..."
 ./cp_data_by_class.sh  "${FACE_OUT_DIR}" "${COMBINED_OUT_DIR}"
 echo "COMPLETED!"
 
-
-echo "AUGMENTING DATA ..."
-python3 dataset_agumentation.py  "${COMBINED_OUT_DIR}" "${AUG_OUT_DIR}"
-echo "COMPLETED!"
-
-mv "${AUG_OUT_DIR}" "${FINAL_OUT_DIR}"
+mv "${COMBINED_OUT_DIR}" "${FINAL_OUT_DIR}"
 
 echo "final output dir : ${FINAL_OUT_DIR}"
