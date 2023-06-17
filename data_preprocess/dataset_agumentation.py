@@ -50,16 +50,6 @@ def generate_augmented_images(input_folder, output_folder):
             #mirror image 
             mirrored_image = cv2.flip(image, 1)
             
-            # # Generate images with different color combinations
-            # mirror_image_grayscale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            # mirror_image_inverted = cv2.bitwise_not(image)
-            # mirror_image_blurred = cv2.GaussianBlur(image, (5, 5), 0)
-
-            # # Generate images with different brightness and contrast settings
-            # mirror_image_bright = adjust_brightness(image, 50)
-            # mirror_image_dark = adjust_brightness(image, -50)
-            # mirror_image_high_contrast = adjust_contrast(image, 50)
-            # mirror_image_low_contrast = adjust_contrast(image, -50)
 
             # Save augmented images
             cv2.imwrite(output_path + "_original.jpg", image)
@@ -72,13 +62,6 @@ def generate_augmented_images(input_folder, output_folder):
             cv2.imwrite(output_path + "_low_contrast.jpg", image_low_contrast)
             
             cv2.imwrite(output_path + "_mirror.jpg", mirrored_image)
-            # cv2.imwrite(output_path + "_mirror_" + "_grayscale.jpg", mirror_image_grayscale)
-            # cv2.imwrite(output_path + "_mirror_" +  "_inverted.jpg", mirror_image_inverted)
-            # cv2.imwrite(output_path + "_mirror_" +  "_blurred.jpg", mirror_image_blurred)
-            # cv2.imwrite(output_path + "_mirror_" +  "_bright.jpg", mirror_image_bright)
-            # cv2.imwrite(output_path + "_mirror_" +  "_dark.jpg", mirror_image_dark)
-            # cv2.imwrite(output_path + "_mirror_" +  "_high_contrast.jpg", mirror_image_high_contrast)
-            # cv2.imwrite(output_path + "_mirror_" +  "_low_contrast.jpg", mirror_image_low_contrast)
 
 if __name__ == "__main__":
     generate_augmented_images(input_folder, output_folder)

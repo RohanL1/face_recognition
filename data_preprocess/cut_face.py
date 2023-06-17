@@ -1,16 +1,14 @@
 import cv2
 import os
-
+import sys
 # using OpenCV's pre-trained model
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_alt2.xml')
 
 # Path to input images
-# main_directory = '/home/zero/ml/project/Photos/'
-main_directory = '/home/zero/ml/project/NEW/aligned'
+main_directory = sys.argv[1]
 
 # Path to output dir
-# output_directory = '/home/zero/ml/project/face2/'
-output_directory = '/home/zero/ml/project/NEW/face/'
+output_directory = sys.argv[2]
 
 # mkdir the output dir if doesn't exist
 os.makedirs(output_directory, exist_ok=True)

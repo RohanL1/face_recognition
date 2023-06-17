@@ -9,9 +9,14 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 # from sklearn.model_selection import train_test_split
 
-TRAIN_DIR = '/home/zero/ml/project/NEW/TRAIN/augment'
-TEST_DIR = '/home/zero/ml/project/NEW/TEST/combined'
+import sys
+
+
+# train and test data dir paths
+# TRAIN_DIR = '/home/zero/ml/project/NEW/TRAIN/augment'
+# TEST_DIR = '/home/zero/ml/project/NEW/TEST/combined'
 MODEL_DIR = 'trained_models'
+
 res = (64,64) # image res
 
 
@@ -71,6 +76,10 @@ def save_model_to_file(model, now_time, model_dir,  prefix=''):
 
 # Main function
 if __name__ == '__main__' : 
+    
+    TRAIN_DIR = sys.argv[1]
+    TEST_DIR = sys.argv[2]
+    
     print("LODING DATA ...")
     train_data, train_labels = load_data_from_dir_res(TRAIN_DIR, res)
     test_data, test_labels = load_data_from_dir_res(TEST_DIR, res)

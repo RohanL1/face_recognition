@@ -31,9 +31,12 @@ This script uses the Keras VGG Face model to extract facial features from the pr
 The trained model will be saved as trained_models/model_ser_svm_face_recognition_<TIMESTAMP>.pkl</br>
 
 4. Once the model is trained, you can perform face recognition on new images using the face_detect.py script:</br>
-`python3 face_detect.py`
+`python3 face_detect.py <MODEL_PATH>`
  </br>
 The script will load the trained model and capture webcam feed to output the predicted person's name for each detected face in the webcam feed.
+
+NOTE: update model path accordingly 
+
 </br>
 **Acknowledgments**</br>
 Keras VGG Face: http://www.robots.ox.ac.uk/~vgg/software/vgg_face/</br>

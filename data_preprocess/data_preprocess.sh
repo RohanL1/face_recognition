@@ -7,13 +7,86 @@ help()
 	echo "Exiting..."
 }
 
-[[ $# -ne 2 ]] && help && exit -1 
+out_banner()
+{
+	echo "AUG_OUT_DIR : $AUG_OUT_DIR"
+	echo "COMBINED_OUT_DIR : $COMBINED_OUT_DIR"
+	echo "FACE_OUT_DIR : $FACE_OUT_DIR"
+	echo "ALIGNED_OUT_DIR : $ALIGNED_OUT_DIR"
 
-in_dir=$1
-out_dir=$2
+}
 
-[[ -d "$out_dir" ]] || (echo "\"$out_dir\" dir not present, creating ..." ; mkdir "$out_dir" )
+check_class_folders()
+{
+CURR_DIR=$1
+echo "checking for all the class directorie in $CURR_DIR"
+echo "Abdullah Khan
+Akshat Kalra
+Bowen Cheng
+Chakrapani Chitnis
+Chin Fang Hsu
+Edison Nalluri
+Kai Cong
+Kyle Fenole
+Landis Fusato
+Minghao Zhang
+Mohit Jawale
+Patrick Lee
+Peiyuan Li
+Rahim Firoz Chunara
+Rohan Vikas Lagare
+Sadwi Kandula
+Samuel Anderson
+Shaunak Chaudhary
+Tampara Venkata Santosh Anish Dora
+Weixuan Lin
+Xinyu Dong
+Yaoyao Peng
+Yufan Lin" | while read SUB_DIR 
+do 
+CHECK_DIR="${CURR_DIR}/${SUB_DIR}"
+[[ -d "$CHECK_DIR" ]] || (echo "\"$CHECK_DIR\" dir not present, creating ..." ; mkdir -p "$CHECK_DIR" )
+done
+}
 
-align.py
-cut_face.py
-data_aug_new.py
+# [[ $# -ne 2 ]] && help && exit -1 
+
+IN_DIR=$1
+OUT_DIR=$2
+
+[[ -d "$OUT_DIR" ]] || (echo "\"$OUT_DIR\" dir not present, creating ..." ; mkdir -p "$OUT_DIR" )
+
+AUG_OUT_DIR="${OUT_DIR}/augment/"
+COMBINED_OUT_DIR="${OUT_DIR}/combined/"
+FACE_OUT_DIR="${OUT_DIR}/face/"
+ALIGNED_OUT_DIR="${OUT_DIR}/aligned/"
+
+out_banner
+
+echo "deleting .DS_store files from input dir if present ... "
+find ${IN_DIR} -name ".DS_Store" -type f -delete
+
+# echo "ALIGNING IMAGES ..."
+# python3 align.py "${IN_DIR}" "${ALIGNED_OUT_DIR}"
+# echo "COMPLETED!"
+
+echo "CUTTING FACES FROM IMAGES ..."
+python3 cut_face.py  "${IN_DIR}" "${FACE_OUT_DIR}"
+echo "COMPLETED!"
+
+check_class_folders "${FACE_OUT_DIR}"
+
+echo "PLEASE CHECK FACES DIR FOR INCORRET FACES AND DELETE"
+echo "FACE DIR PATH : '$FACE_OUT_DIR'"
+echo "PRESS ENTER TO CONTINUE ..."
+read tmp < /dev/tty
+
+
+echo "COPING ALL IMAGES TO COMBINED FOLDER ..."
+./cp_data_by_class.sh  "${FACE_OUT_DIR}" "${COMBINED_OUT_DIR}"
+echo "COMPLETED!"
+
+
+echo "AUGMENTING DATA ..."
+python3 dataset_agumentation.py  "${COMBINED_OUT_DIR}" "${AUG_OUT_DIR}"
+echo "COMPLETED!"

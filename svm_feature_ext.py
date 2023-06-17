@@ -15,9 +15,12 @@ from sklearn.svm import SVC
 # package to save model
 import pickle
 
+import sys
+
+
 # train and test data dir paths
-TRAIN_DIR = '/home/zero/ml/project/NEW/TRAIN/augment'
-TEST_DIR = '/home/zero/ml/project/NEW/TEST/combined'
+# TRAIN_DIR = '/home/zero/ml/project/NEW/TRAIN/augment'
+# TEST_DIR = '/home/zero/ml/project/NEW/TEST/combined'
 MODEL_DIR = 'trained_models'
 
 # Load the pre-trained VGGFace model
@@ -77,6 +80,9 @@ def save_model_to_file(model, now_time, model_dir,  prefix=''):
 
 # Main function
 if __name__ == '__main__' : 
+    
+    TRAIN_DIR = sys.argv[1]
+    TEST_DIR = sys.argv[2]
     
     print("LODING DATA ...")
     train_data, train_labels = load_data_from_dir(TRAIN_DIR)
