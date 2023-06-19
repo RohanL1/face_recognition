@@ -48,4 +48,4 @@ Keras VGG Face: http://www.robots.ox.ac.uk/~vgg/software/vgg_face/</br>
 OpenCV: https://opencv.org/</br>
 </br>
 **License**</br>
-This project is licensed under the MIT License. See the LICENSE file for more details.</br>
+This project is licensed under the MIT License.</br>
